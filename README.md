@@ -1,73 +1,143 @@
 
+# Campus Smart Eats - MIT-ADT University Food Ordering System
 
-## Project info
+A modern food ordering system designed specifically for MIT-ADT University campus, allowing students to order food, track deliveries, and manage their orders seamlessly.
 
-**URL**: https://lovable.dev/projects/019d9aa5-8f56-46fe-888b-bf57c3533543
+![Campus Smart Eats](src/assets/hero-campus.jpg)
 
-## How can I edit this code?
+## 🌟 Features
 
-There are several ways of editing your application.
+- **User Authentication**
+  - Student login/signup
+  - Admin portal access
+  - Secure authentication flow
 
-**Use Lovable**
+- **Food Ordering**
+  - Browse menu by categories
+  - Real-time search functionality
+  - Cart management
+  - Easy checkout process
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/019d9aa5-8f56-46fe-888b-bf57c3533543) and start prompting.
+- **Order Management**
+  - Real-time order tracking
+  - Order history
+  - Status updates
+  - Estimated delivery time
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Admin Dashboard**
+  - Order management
+  - Menu management
+  - Sales analytics
+  - Real-time updates
 
-**Use your preferred IDE**
+## 🚀 Tech Stack
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- **Frontend Framework:** React 18
+- **Build Tool:** Vite
+- **Language:** TypeScript
+- **Styling:** 
+  - Tailwind CSS
+  - shadcn/ui components
+- **State Management:** React Query
+- **Routing:** React Router v6
+- **UI Components:**
+  - Radix UI Primitives
+  - Lucide Icons
+- **Development Tools:**
+  - ESLint
+  - Prettier
+  - PostCSS
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 📦 Installation
 
-Follow these steps:
-
+1. Clone the repository:
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+git clone https://github.com/yourusername/campus-smart-eats.git
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+2. Navigate to the project directory:
+```sh
+cd campus-smart-eats
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
+3. Install dependencies:
+```sh
+npm install
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+4. Create a `.env` file in the root directory:
+```env
+VITE_API_URL=your_api_url
+```
+
+5. Start the development server:
+```sh
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## 🛠️ Available Scripts
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run lint` - Run ESLint
+- `npm run preview` - Preview production build
 
-**Use GitHub Codespaces**
+## 📁 Project Structure
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```
+campus-smart-eats/
+├── src/
+│   ├── assets/         # Images and static assets
+│   ├── components/     # Reusable UI components
+│   ├── hooks/         # Custom React hooks
+│   ├── lib/           # Utility functions
+│   ├── pages/         # Page components
+│   └── services/      # API services
+├── public/            # Public assets
+└── server/           # Backend server code
+```
 
-## What technologies are used for this project?
+## 🔐 Environment Variables
 
-This project is built with:
+Create a `.env` file in the root directory with the following variables:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```env
+VITE_API_URL=your_api_url
+```
 
-## How can I deploy this project?
+## 🌐 Deployment
 
-Simply open [Lovable](https://lovable.dev/projects/019d9aa5-8f56-46fe-888b-bf57c3533543) and click on Share -> Publish.
+1. Build the project:
+```sh
+npm run build
+```
 
-## Can I connect a custom domain to my Lovable project?
+2. Preview the build:
+```sh
+npm run preview
+```
 
-Yes, you can!
+3. Deploy the `dist` folder to your hosting provider
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 🤝 Contributing
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👥 Authors
+
+- **Your Name** - *Initial work* - [YourGitHub](https://github.com/yourusername)
+
+## 🙏 Acknowledgments
+
+- MIT-ADT University for the opportunity
+- All contributors who have helped this project
+- [shadcn/ui](https://ui.shadcn.com/) for the amazing UI components
+- [Radix UI](https://www.radix-ui.com/) for the accessible primitives
