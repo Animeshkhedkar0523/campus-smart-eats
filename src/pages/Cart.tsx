@@ -1,54 +1,117 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingBag, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { cartAPI, orderAPI } from "@/services/api";
 
-interface CartItem {
-  id: number;
+interface MenuItem {
+  _id: string;
   name: string;
   price: number;
-  quantity: number;
   image: string;
+}
+
+interface CartItem {
+  menuItem: MenuItem;
+  quantity: number;
+  _id: string;
 }
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
-  const updateQuantity = (id: number, delta: number) => {
-    setCartItems((items) =>
-      items
-        .map((item) =>
-          item.id === id
-            ? { ...item, quantity: Math.max(0, item.quantity + delta) }
-            : item
-        )
-        .filter((item) => item.quantity > 0)
-    );
+  useEffect(() => {
+    fetchCart();
+  }, []);
+
+  const fetchCart = async () => {
+    try {
+      const response = await cartAPI.getCart();
+      setCartItems(response.data.items || []);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to load cart",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const removeItem = (id: number) => {
-    setCartItems((items) => items.filter((item) => item.id !== id));
-    toast({
-      title: "Item Removed",
-      description: "Item has been removed from your cart",
-    });
+  const updateQuantity = async (menuItemId: string, newQuantity: number) => {
+    try {
+      const response = await cartAPI.updateCartItem(menuItemId, newQuantity);
+      setCartItems(response.data.items || []);
+      if (newQuantity === 0) {
+        toast({
+          title: "Item Removed",
+          description: "Item has been removed from your cart",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update cart",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const removeItem = async (menuItemId: string) => {
+    await updateQuantity(menuItemId, 0);
   };
 
   const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
+    (sum, item) => sum + item.menuItem.price * item.quantity,
     0
   );
   const tax = subtotal * 0.05;
   const total = subtotal + tax;
 
-  const handleCheckout = () => {
-    toast({
-      title: "Order Placed!",
-      description: "Your order has been placed successfully",
-    });
+  const handleCheckout = async () => {
+    setIsCheckingOut(true);
+    try {
+      const orderData = {
+        items: cartItems.map(item => ({
+          menuItem: item.menuItem._id,
+          quantity: item.quantity,
+          price: item.menuItem.price,
+        })),
+        totalAmount: total,
+      };
+      
+      const response = await orderAPI.createOrder(orderData);
+      await cartAPI.clearCart();
+      
+      toast({
+        title: "Order Placed!",
+        description: "Your order has been placed successfully",
+      });
+      navigate('/track');
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.response?.data?.error || "Failed to place order",
+        variant: "destructive",
+      });
+    } finally {
+      setIsCheckingOut(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   if (cartItems.length === 0) {
     return (
@@ -75,23 +138,23 @@ const Cart = () => {
         <div className="space-y-4 mb-8">
           {cartItems.map((item) => (
             <div
-              key={item.id}
+              key={item._id}
               className="flex gap-4 p-4 bg-card rounded-2xl shadow-[var(--shadow-card)]"
             >
               <img
-                src={item.image}
-                alt={item.name}
+                src={item.menuItem.image}
+                alt={item.menuItem.name}
                 className="w-24 h-24 object-cover rounded-xl"
               />
               <div className="flex-1">
-                <h3 className="font-semibold text-lg mb-2">{item.name}</h3>
-                <p className="text-primary font-bold">₹{item.price}</p>
+                <h3 className="font-semibold text-lg mb-2">{item.menuItem.name}</h3>
+                <p className="text-primary font-bold">₹{item.menuItem.price}</p>
               </div>
               <div className="flex flex-col items-end justify-between">
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => removeItem(item.id)}
+                  onClick={() => removeItem(item.menuItem._id)}
                   className="text-destructive hover:text-destructive"
                 >
                   <Trash2 className="h-4 w-4" />
@@ -100,7 +163,7 @@ const Cart = () => {
                   <Button
                     variant="outline"
                     size="icon"
-                    onClick={() => updateQuantity(item.id, -1)}
+                    onClick={() => updateQuantity(item.menuItem._id, item.quantity - 1)}
                   >
                     <Minus className="h-4 w-4" />
                   </Button>
@@ -110,7 +173,7 @@ const Cart = () => {
                   <Button
                     variant="outline"
                     size="icon"
-                    onClick={() => updateQuantity(item.id, 1)}
+                    onClick={() => updateQuantity(item.menuItem._id, item.quantity + 1)}
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
@@ -140,8 +203,16 @@ const Cart = () => {
             variant="hero"
             size="lg"
             className="w-full"
+            disabled={isCheckingOut}
           >
-            Proceed to Checkout
+            {isCheckingOut ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Processing...
+              </>
+            ) : (
+              "Proceed to Checkout"
+            )}
           </Button>
         </div>
       </div>

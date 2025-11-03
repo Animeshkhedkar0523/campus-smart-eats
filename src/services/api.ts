@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 // Create axios instance with default config
 const api = axios.create({
@@ -53,6 +53,8 @@ export const orderAPI = {
   getOrderById: (id: string) => api.get(`/orders/${id}`),
   updateOrderStatus: (id: string, status: string) =>
     api.put(`/orders/${id}/status`, { status }),
+  getAllOrders: () => api.get('/orders/admin/all'),
+  getOrderStats: () => api.get('/orders/admin/stats'),
 };
 
 export default api;

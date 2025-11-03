@@ -12,6 +12,7 @@ import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import NotFound from "./pages/NotFound";
 import Navbar from "./components/Navbar";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -30,20 +31,24 @@ const App = () => (
             </>
           } />
           <Route path="/cart" element={
-            <>
+            <ProtectedRoute>
               <Navbar cartCount={0} />
               <Cart />
-            </>
+            </ProtectedRoute>
           } />
           <Route path="/track" element={
-            <>
+            <ProtectedRoute>
               <Navbar cartCount={0} />
               <TrackOrder />
-            </>
+            </ProtectedRoute>
           } />
           <Route path="/auth" element={<Auth />} />
           <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/dashboard" element={
+            <ProtectedRoute requireAdmin={true}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          } />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

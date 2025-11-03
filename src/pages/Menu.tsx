@@ -1,16 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import thaliImage from "@/assets/food-thali.jpg";
-import breakfastImage from "@/assets/food-breakfast.jpg";
-import snacksImage from "@/assets/food-snacks.jpg";
-import beveragesImage from "@/assets/food-beverages.jpg";
+import { menuAPI, cartAPI } from "@/services/api";
 
 interface MenuItem {
-  id: number;
+  _id: string;
   name: string;
   description: string;
   price: number;
@@ -19,72 +16,45 @@ interface MenuItem {
   available: boolean;
 }
 
-const menuItems: MenuItem[] = [
-  {
-    id: 1,
-    name: "Special Thali",
-    description: "Rice, Dal, 2 Sabzi, Roti, Salad, Sweet",
-    price: 80,
-    category: "lunch",
-    image: thaliImage,
-    available: true,
-  },
-  {
-    id: 2,
-    name: "Idli Vada Combo",
-    description: "3 Idli, 1 Vada with Sambar & Chutney",
-    price: 50,
-    category: "breakfast",
-    image: breakfastImage,
-    available: true,
-  },
-  {
-    id: 3,
-    name: "Samosa Platter",
-    description: "Crispy samosas with chutney",
-    price: 30,
-    category: "snacks",
-    image: snacksImage,
-    available: true,
-  },
-  {
-    id: 4,
-    name: "Fresh Juice",
-    description: "Seasonal fruit juice",
-    price: 40,
-    category: "beverages",
-    image: beveragesImage,
-    available: true,
-  },
-  {
-    id: 5,
-    name: "Masala Dosa",
-    description: "Crispy dosa with potato filling",
-    price: 60,
-    category: "breakfast",
-    image: breakfastImage,
-    available: true,
-  },
-  {
-    id: 6,
-    name: "Paneer Thali",
-    description: "Rice, Dal, Paneer Sabzi, Roti, Salad",
-    price: 100,
-    category: "lunch",
-    image: thaliImage,
-    available: true,
-  },
-];
-
 const Menu = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const addToCart = (item: MenuItem) => {
-    toast({
-      title: "Added to Cart",
-      description: `${item.name} has been added to your cart`,
-    });
+  useEffect(() => {
+    fetchMenuItems();
+  }, []);
+
+  const fetchMenuItems = async () => {
+    try {
+      const response = await menuAPI.getAllItems();
+      setMenuItems(response.data);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to load menu items",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addToCart = async (item: MenuItem) => {
+    try {
+      await cartAPI.addToCart(item._id, 1);
+      toast({
+        title: "Added to Cart",
+        description: `${item.name} has been added to your cart`,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.response?.data?.error || "Failed to add to cart",
+        variant: "destructive",
+      });
+    }
   };
 
   const filteredItems = (category: string) => {
@@ -94,6 +64,14 @@ const Menu = () => {
         item.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   const FoodCard = ({ item }: { item: MenuItem }) => (
     <div className="group bg-card rounded-2xl overflow-hidden shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-elevated)] transition-all">
@@ -156,7 +134,7 @@ const Menu = () => {
           <TabsContent value="breakfast" className="mt-6">
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredItems("breakfast").map((item) => (
-                <FoodCard key={item.id} item={item} />
+                <FoodCard key={item._id} item={item} />
               ))}
             </div>
           </TabsContent>
@@ -164,7 +142,7 @@ const Menu = () => {
           <TabsContent value="lunch" className="mt-6">
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredItems("lunch").map((item) => (
-                <FoodCard key={item.id} item={item} />
+                <FoodCard key={item._id} item={item} />
               ))}
             </div>
           </TabsContent>
@@ -172,7 +150,7 @@ const Menu = () => {
           <TabsContent value="snacks" className="mt-6">
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredItems("snacks").map((item) => (
-                <FoodCard key={item.id} item={item} />
+                <FoodCard key={item._id} item={item} />
               ))}
             </div>
           </TabsContent>
@@ -180,7 +158,7 @@ const Menu = () => {
           <TabsContent value="beverages" className="mt-6">
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredItems("beverages").map((item) => (
-                <FoodCard key={item.id} item={item} />
+                <FoodCard key={item._id} item={item} />
               ))}
             </div>
           </TabsContent>

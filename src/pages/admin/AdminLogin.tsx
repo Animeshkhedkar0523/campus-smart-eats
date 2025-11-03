@@ -6,24 +6,49 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Shield } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 const AdminLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    setTimeout(() => {
-      setIsLoading(false);
+    const formData = new FormData(e.target as HTMLFormElement);
+    const email = formData.get('admin-email') as string;
+    const password = formData.get('admin-password') as string;
+
+    try {
+      const user = await login(email, password);
+      
+      // Check if user is admin
+      if (user.role !== 'admin') {
+        toast({
+          title: "Access Denied",
+          description: "You don't have admin privileges",
+          variant: "destructive",
+        });
+        return;
+      }
+
       toast({
         title: "Admin Login Successful",
         description: "Welcome to the admin dashboard",
       });
       navigate("/admin/dashboard");
-    }, 1500);
+    } catch (error: any) {
+      toast({
+        title: "Login Failed",
+        description: error.response?.data?.error || "Invalid credentials",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -44,8 +69,9 @@ const AdminLogin = () => {
               <Label htmlFor="admin-email">Admin Email</Label>
               <Input
                 id="admin-email"
+                name="admin-email"
                 type="email"
-                placeholder="admin@campussmateats.com"
+                placeholder="admin@campuseats.com"
                 required
               />
             </div>
@@ -53,6 +79,7 @@ const AdminLogin = () => {
               <Label htmlFor="admin-password">Password</Label>
               <Input
                 id="admin-password"
+                name="admin-password"
                 type="password"
                 placeholder="Enter admin password"
                 required

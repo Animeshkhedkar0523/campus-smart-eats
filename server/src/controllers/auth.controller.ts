@@ -26,7 +26,15 @@ export const register = async (req: Request, res: Response) => {
       expiresIn: '7d',
     });
 
-    res.status(201).json({ user, token });
+    // Return user without password
+    const userResponse = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    };
+
+    res.status(201).json({ user: userResponse, token });
   } catch (error) {
     res.status(500).json({ error: 'Error creating user' });
   }
@@ -53,7 +61,15 @@ export const login = async (req: Request, res: Response) => {
       expiresIn: '7d',
     });
 
-    res.json({ user, token });
+    // Return user without password
+    const userResponse = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    };
+
+    res.json({ user: userResponse, token });
   } catch (error) {
     res.status(500).json({ error: 'Error logging in' });
   }

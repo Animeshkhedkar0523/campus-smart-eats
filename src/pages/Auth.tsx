@@ -6,36 +6,66 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { UtensilsCrossed } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const { login, register } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    setTimeout(() => {
-      setIsLoading(false);
+    const formData = new FormData(e.target as HTMLFormElement);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    try {
+      await login(email, password);
       toast({
         title: "Login Successful",
         description: "Welcome back to Campus Smart Eats!",
       });
-    }, 1500);
+      navigate('/menu');
+    } catch (error: any) {
+      toast({
+        title: "Login Failed",
+        description: error.response?.data?.error || "Invalid credentials",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    setTimeout(() => {
-      setIsLoading(false);
+    const formData = new FormData(e.target as HTMLFormElement);
+    const name = formData.get('name') as string;
+    const email = formData.get('signup-email') as string;
+    const password = formData.get('signup-password') as string;
+
+    try {
+      await register(name, email, password);
       toast({
         title: "Account Created",
         description: "Welcome to Campus Smart Eats!",
       });
-    }, 1500);
+      navigate('/menu');
+    } catch (error: any) {
+      toast({
+        title: "Registration Failed",
+        description: error.response?.data?.error || "Could not create account",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -63,6 +93,7 @@ const Auth = () => {
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
+                    name="email"
                     type="email"
                     placeholder="your.email@mituniversity.edu.in"
                     required
@@ -72,6 +103,7 @@ const Auth = () => {
                   <Label htmlFor="password">Password</Label>
                   <Input
                     id="password"
+                    name="password"
                     type="password"
                     placeholder="Enter your password"
                     required
@@ -94,6 +126,7 @@ const Auth = () => {
                   <Label htmlFor="name">Full Name</Label>
                   <Input
                     id="name"
+                    name="name"
                     type="text"
                     placeholder="John Doe"
                     required
@@ -103,6 +136,7 @@ const Auth = () => {
                   <Label htmlFor="signup-email">Email</Label>
                   <Input
                     id="signup-email"
+                    name="signup-email"
                     type="email"
                     placeholder="your.email@mituniversity.edu.in"
                     required
@@ -112,15 +146,16 @@ const Auth = () => {
                   <Label htmlFor="phone">Phone Number</Label>
                   <Input
                     id="phone"
+                    name="phone"
                     type="tel"
                     placeholder="+91 98765 43210"
-                    required
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-password">Password</Label>
                   <Input
                     id="signup-password"
+                    name="signup-password"
                     type="password"
                     placeholder="Create a strong password"
                     required
