@@ -57,11 +57,18 @@ const Menu = () => {
     }
   };
 
+  const uniqueCategories = Array.from(
+    new Set(menuItems.map((i) => i.category))
+  );
+
   const filteredItems = (category: string) => {
-    return menuItems.filter(
-      (item) =>
-        item.category === category &&
-        item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    const items =
+      category === 'all'
+        ? menuItems
+        : menuItems.filter((item) => item.category === category);
+
+    return items.filter((item) =>
+      item.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
   };
 
@@ -123,45 +130,34 @@ const Menu = () => {
           </div>
         </div>
 
-        <Tabs defaultValue="breakfast" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-8">
-            <TabsTrigger value="breakfast">Breakfast</TabsTrigger>
-            <TabsTrigger value="lunch">Lunch</TabsTrigger>
-            <TabsTrigger value="snacks">Snacks</TabsTrigger>
-            <TabsTrigger value="beverages">Beverages</TabsTrigger>
+        <Tabs defaultValue={uniqueCategories[0] || 'all'} className="w-full">
+          <TabsList className="flex flex-wrap gap-2 mb-8">
+            <TabsTrigger value="all">All</TabsTrigger>
+            {uniqueCategories.map((cat) => (
+              <TabsTrigger key={cat} value={cat}>
+                {cat.charAt(0).toUpperCase() + cat.slice(1)}
+              </TabsTrigger>
+            ))}
           </TabsList>
 
-          <TabsContent value="breakfast" className="mt-6">
+          {/* All category content + dynamic categories */}
+          <TabsContent value="all" className="mt-6">
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredItems("breakfast").map((item) => (
+              {filteredItems('all').map((item) => (
                 <FoodCard key={item._id} item={item} />
               ))}
             </div>
           </TabsContent>
 
-          <TabsContent value="lunch" className="mt-6">
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredItems("lunch").map((item) => (
-                <FoodCard key={item._id} item={item} />
-              ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="snacks" className="mt-6">
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredItems("snacks").map((item) => (
-                <FoodCard key={item._id} item={item} />
-              ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="beverages" className="mt-6">
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredItems("beverages").map((item) => (
-                <FoodCard key={item._id} item={item} />
-              ))}
-            </div>
-          </TabsContent>
+          {uniqueCategories.map((cat) => (
+            <TabsContent key={cat} value={cat} className="mt-6">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredItems(cat).map((item) => (
+                  <FoodCard key={item._id} item={item} />
+                ))}
+              </div>
+            </TabsContent>
+          ))}
         </Tabs>
       </div>
     </div>
