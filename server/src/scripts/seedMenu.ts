@@ -612,9 +612,18 @@ const run = async () => {
     await MenuItem.deleteMany({});
     console.log('Cleared existing menu items');
 
-    // Insert new menu items
-    await MenuItem.insertMany(menuItems);
-    console.log(`Seeded ${menuItems.length} menu items`);
+      // Ensure every menu item has an image (use placeholder if missing)
+      const placeholder = process.env.PLACEHOLDER_IMAGE || 'https://via.placeholder.com/400x250?text=No+Image';
+      menuItems.forEach((mi) => {
+        if (!('image' in mi) || !mi.image) {
+          // @ts-ignore
+          mi.image = placeholder;
+        }
+      });
+
+      // Insert new menu items
+      await MenuItem.insertMany(menuItems);
+      console.log(`Seeded ${menuItems.length} menu items`);
     
     process.exit(0);
   } catch (err) {
