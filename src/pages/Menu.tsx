@@ -12,7 +12,7 @@ interface MenuItem {
   description: string;
   price: number;
   category: string;
-  image: string;
+  image?: string;
   available: boolean;
 }
 
@@ -83,9 +83,17 @@ const Menu = () => {
   const FoodCard = ({ item }: { item: MenuItem }) => (
     <div className="group bg-card rounded-2xl overflow-hidden shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-elevated)] transition-all">
       <div className="relative h-48 overflow-hidden">
+        {/* Use a fallback placeholder when image is missing or fails to load */}
         <img
-          src={item.image}
+          src={item.image || 'https://via.placeholder.com/400x250?text=No+Image'}
           alt={item.name}
+          onError={(e) => {
+            const target = e.currentTarget as HTMLImageElement;
+            if (!target.dataset.fallback) {
+              target.dataset.fallback = 'true';
+              target.src = 'https://via.placeholder.com/400x250?text=No+Image';
+            }
+          }}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
         {!item.available && (

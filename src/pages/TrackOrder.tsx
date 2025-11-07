@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle2, Clock, Package, Utensils, Loader2, ShoppingBag } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from 'react-router-dom';
 import { orderAPI } from "@/services/api";
 import { useToast } from "@/hooks/use-toast";
 
@@ -29,6 +29,7 @@ const TrackOrder = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchOrders();
@@ -44,6 +45,18 @@ const TrackOrder = () => {
         description: "Failed to load orders",
         variant: "destructive",
       });
+      // If unauthorized, redirect to login so user can authenticate
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const e = error as any;
+      if (e?.response?.status === 401) {
+        toast({
+          title: 'Please sign in',
+          description: 'You need to sign in to view your orders',
+          variant: 'warning',
+        });
+        navigate('/auth');
+        return;
+      }
     } finally {
       setLoading(false);
     }
