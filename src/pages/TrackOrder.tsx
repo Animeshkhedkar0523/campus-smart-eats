@@ -112,8 +112,13 @@ const TrackOrder = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="min-h-screen bg-background py-8 px-4">
+        <div className="max-w-3xl mx-auto">
+          <h1 className="text-4xl font-bold mb-8">Your Orders</h1>
+          <div className="flex items-center justify-center h-64">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        </div>
       </div>
     );
   }
