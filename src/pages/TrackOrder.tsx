@@ -52,7 +52,7 @@ const TrackOrder = () => {
         toast({
           title: 'Please sign in',
           description: 'You need to sign in to view your orders',
-          variant: 'warning',
+          variant: 'destructive',
         });
         navigate('/auth');
         return;

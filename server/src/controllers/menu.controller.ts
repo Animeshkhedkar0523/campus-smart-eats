@@ -3,15 +3,8 @@ import MenuItem from '../models/menuItem.model';
 
 export const getAllMenuItems = async (req: Request, res: Response) => {
   try {
-    const menuItems = await MenuItem.find({ available: true });
-    const placeholder = process.env.PLACEHOLDER_IMAGE || 'https://via.placeholder.com/400x250?text=No+Image';
-    // Ensure every returned item has an image field (sanitization)
-    const sanitized = menuItems.map((m) => {
-      const obj = m.toObject();
-      if (!obj.image) obj.image = placeholder;
-      return obj;
-    });
-    res.json(sanitized);
+    const menuItems = await MenuItem.find();
+    res.json(menuItems);
   } catch (error) {
     res.status(500).json({ error: 'Error fetching menu items' });
   }
@@ -23,10 +16,7 @@ export const getMenuItem = async (req: Request, res: Response) => {
     if (!menuItem) {
       return res.status(404).json({ error: 'Menu item not found' });
     }
-    const placeholder = process.env.PLACEHOLDER_IMAGE || 'https://via.placeholder.com/400x250?text=No+Image';
-    const obj = menuItem.toObject();
-    if (!obj.image) obj.image = placeholder;
-    res.json(obj);
+    res.json(menuItem);
   } catch (error) {
     res.status(500).json({ error: 'Error fetching menu item' });
   }

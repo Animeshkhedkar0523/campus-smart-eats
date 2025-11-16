@@ -82,26 +82,6 @@ const Menu = () => {
 
   const FoodCard = ({ item }: { item: MenuItem }) => (
     <div className="group bg-card rounded-2xl overflow-hidden shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-elevated)] transition-all">
-      <div className="relative h-48 overflow-hidden">
-        {/* Use a fallback placeholder when image is missing or fails to load */}
-        <img
-          src={item.image || 'https://via.placeholder.com/400x250?text=No+Image'}
-          alt={item.name}
-          onError={(e) => {
-            const target = e.currentTarget as HTMLImageElement;
-            if (!target.dataset.fallback) {
-              target.dataset.fallback = 'true';
-              target.src = 'https://via.placeholder.com/400x250?text=No+Image';
-            }
-          }}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-        />
-        {!item.available && (
-          <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-            <span className="text-white font-semibold">Out of Stock</span>
-          </div>
-        )}
-      </div>
       <div className="p-4">
         <h3 className="font-semibold text-lg mb-2">{item.name}</h3>
         <p className="text-sm text-muted-foreground mb-3">{item.description}</p>
@@ -117,6 +97,11 @@ const Menu = () => {
             Add
           </Button>
         </div>
+        {!item.available && (
+          <div className="mt-2 text-center bg-red-100 text-red-600 py-1 px-2 rounded">
+            Out of Stock
+          </div>
+        )}
       </div>
     </div>
   );

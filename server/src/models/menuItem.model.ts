@@ -5,7 +5,6 @@ export interface IMenuItem {
   description: string;
   price: number;
   category: string;
-  image: string;
   available: boolean;
 }
 
@@ -25,10 +24,6 @@ const menuItemSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-  },
-  image: {
-    type: String,
-    required: false,
   },
   available: {
     type: Boolean,

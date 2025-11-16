@@ -20,7 +20,6 @@ const menuItems = [
     description: "Suji cooked with vegetables and spices",
     price: 35,
     category: "breakfast",
-    image: "https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=400",
     available: true,
   },
   {
@@ -612,14 +611,7 @@ const run = async () => {
     await MenuItem.deleteMany({});
     console.log('Cleared existing menu items');
 
-      // Ensure every menu item has an image (use placeholder if missing)
-      const placeholder = process.env.PLACEHOLDER_IMAGE || 'https://via.placeholder.com/400x250?text=No+Image';
-      menuItems.forEach((mi) => {
-        if (!('image' in mi) || !mi.image) {
-          // @ts-ignore
-          mi.image = placeholder;
-        }
-      });
+      // No image processing needed
 
       // Insert new menu items
       await MenuItem.insertMany(menuItems);
