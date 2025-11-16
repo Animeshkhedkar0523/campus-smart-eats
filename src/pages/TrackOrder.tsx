@@ -38,14 +38,10 @@ const TrackOrder = () => {
   const fetchOrders = async () => {
     try {
       const response = await orderAPI.getUserOrders();
+      console.log('Orders fetched:', response.data);
       setOrders(response.data);
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to load orders",
-        variant: "destructive",
-      });
-      // If unauthorized, redirect to login so user can authenticate
+      console.error('Error fetching orders:', error);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const e = error as any;
       if (e?.response?.status === 401) {
@@ -57,6 +53,11 @@ const TrackOrder = () => {
         navigate('/auth');
         return;
       }
+      toast({
+        title: "Error",
+        description: "Failed to load orders",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }

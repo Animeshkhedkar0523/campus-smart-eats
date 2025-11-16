@@ -78,6 +78,18 @@ const Navbar = ({ cartCount = 0 }: NavbarProps) => {
             </Link>
           </Button>
 
+          {user && (
+            <Button 
+              asChild 
+              variant={isActive("/track-order") ? "default" : "ghost"}
+              size="sm"
+            >
+              <Link to="/track-order">
+                <span className="hidden sm:inline">Orders</span>
+              </Link>
+            </Button>
+          )}
+
           {user ? (
             <>
               <Button 

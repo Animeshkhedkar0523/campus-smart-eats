@@ -36,7 +36,7 @@ const App = () => (
               <Cart />
             </ProtectedRoute>
           } />
-          <Route path="/track" element={
+          <Route path="/track-order" element={
             <ProtectedRoute>
               <Navbar cartCount={0} />
               <TrackOrder />
