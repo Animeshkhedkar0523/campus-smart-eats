@@ -6,7 +6,7 @@ Your application is now fully operational locally:
 
 ```
 Backend API:  http://localhost:5000
-Frontend App: http://localhost:8081
+Frontend App: http://localhost:8080
 ```
 
 ---
@@ -14,14 +14,14 @@ Frontend App: http://localhost:8081
 ## 🌐 Where to Go Right Now
 
 ### 1️⃣ **Open the Application**
-👉 **http://localhost:8081**
+👉 **http://localhost:8080**
 
 You should see the Campus Smart Eats home page with:
 - App logo (utensils crossed icon)
 - Navigation bar with Home, Menu, Cart, Login buttons
 
 ### 2️⃣ **Login to Test Features**
-Go to: **http://localhost:8081/auth**
+Go to: **http://localhost:8080/auth**
 
 Use credentials:
 ```
@@ -35,7 +35,7 @@ After login, you'll see:
 - Logout button
 
 ### 3️⃣ **Browse the Menu**
-Go to: **http://localhost:8081/menu**
+Go to: **http://localhost:8080/menu**
 
 Features:
 - See all food items
@@ -44,7 +44,7 @@ Features:
 - No authentication needed to browse
 
 ### 4️⃣ **Track Your Orders** (The Fixed Feature!)
-Go to: **http://localhost:8081/track-order**
+Go to: **http://localhost:8080/track-order**
 
 What you'll see:
 - **If not logged in**: Redirects to login page
@@ -52,7 +52,7 @@ What you'll see:
 - **If you placed orders**: Your order details with status
 
 ### 5️⃣ **Admin Features**
-Go to: **http://localhost:8081/admin/dashboard**
+Go to: **http://localhost:8080/admin/dashboard**
 
 Use admin credentials:
 ```
