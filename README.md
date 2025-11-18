@@ -133,7 +133,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👥 Authors
 
-- **Your Name** - *Initial work* - [YourGitHub](https://github.com/yourusername)
+- **Animesh Khedkar ** - *Initial work* - https://github.com/Animeshkhedkar0523/campus-smart-eats
 
 ## 🙏 Acknowledgments
 
