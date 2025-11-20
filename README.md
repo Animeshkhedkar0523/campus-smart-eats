@@ -52,7 +52,7 @@ A modern food ordering system designed specifically for MIT-ADT University campu
 
 1. Clone the repository:
 ```sh
-git clone https://github.com/yourusername/campus-smart-eats.git
+git clone https://github.com/animeshkhedkar0523/campus-smart-eats.git
 ```
 
 2. Navigate to the project directory:
