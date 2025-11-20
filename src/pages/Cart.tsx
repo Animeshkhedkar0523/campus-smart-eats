@@ -93,7 +93,7 @@ const Cart = () => {
         title: "Order Placed!",
         description: "Your order has been placed successfully",
       });
-      navigate('/track');
+      navigate('/track-order');
     } catch (error: any) {
       toast({
         title: "Error",

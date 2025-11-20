@@ -30,7 +30,7 @@ const Home = () => {
               </Link>
             </Button>
             <Button asChild variant="secondary" size="lg" className="bg-white text-primary hover:bg-white/90">
-              <Link to="/track">
+              <Link to="/track-order">
                 <Clock className="mr-2 h-5 w-5" />
                 Track Order
               </Link>
